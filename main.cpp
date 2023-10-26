@@ -18,7 +18,25 @@ public:
 };
  
 void updateBall(Ball &ball, float gravity, float frictionCoefficient, float deltaTime, float screenWidth, float screenHeight, float bounciness, std::list<Ball> &balls) {
-  
+      
+     for (auto &otherBall : balls) {
+        // Avoid checking the ball against itself
+        if (&otherBall == &ball) {
+            continue;
+        }
+ 
+        // Calculate the distance between the two balls
+        float distance = Vector2Distance(ball.position, otherBall.position);
+ 
+        // Check if a collision has occurred
+        if (distance < (ball.radius + otherBall.radius)) {
+            ball.velocity.x = -(ball.velocity.x);
+            otherBall.velocity.x = -(ball.velocity.x);
+            ball.velocity.y = -(ball.velocity.y);
+            otherBall.velocity.y = -(otherBall.velocity.y);
+        }
+    }
+ 
     ball.velocity.y -= gravity;
  
     // Apply friction if the ball is at the top or bottom of the screen
